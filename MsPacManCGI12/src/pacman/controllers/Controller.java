@@ -8,7 +8,7 @@ import pacman.game.Game;
  * controller in various different execution modes. Your controller only needs to provide the
  * code for the getMove() method.
  *
- * @param <T> The generic type of the move to be returned (either a single move for Ms Pac-Man or an EnumMap for the ghosts).
+ * @param <T> The generic type of the move to be returned (either a single move for Ms Pac-Man or an EnumMap for the ghosts)......
  */
 public abstract class Controller<T> implements Runnable
 {
