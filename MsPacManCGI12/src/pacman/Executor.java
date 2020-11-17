@@ -35,7 +35,7 @@ import static pacman.game.Constants.*;
  * structure should not be changed (although you may create sub-packages in these packages)
  * 
  * Adding a new comment
- * 
+ * Adding one more new comment
  */
 @SuppressWarnings("unused")
 public class Executor
