@@ -32,7 +32,10 @@ import static pacman.game.Constants.*;
  * This class may be used to execute the game in timed or un-timed modes, with or without
  * visuals. Competitors should implement their controllers in game.entries.ghosts and 
  * game.entries.pacman respectively. The skeleton classes are already provided. The package
- * structure should not be changed (although you may create sub-packages in these packages).
+ * structure should not be changed (although you may create sub-packages in these packages)
+ * 
+ * Adding a new comment
+ * 
  */
 @SuppressWarnings("unused")
 public class Executor
