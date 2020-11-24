@@ -9,6 +9,10 @@ public class TestGen {
 	/**
 	 * @param args
 	 */
+	
+	/**
+	 * Mithun's comments
+	 */
 	public static void main(String[] args) {
 		File folder = new File("C:\\Users\\Tom\\Desktop\\config\\");
 		File[] listOfFiles = folder.listFiles();
