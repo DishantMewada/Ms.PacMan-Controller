@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,12 +11,12 @@ public class TestGen {
 	 * @param args
 	 */
 	
-	/**
-	 * Mithun's comment
-	 */
+	//Mithun
 	public static void main(String[] args) {
 		File folder = new File("C:\\Users\\Tom\\Desktop\\config\\");
 		File[] listOfFiles = folder.listFiles();
+		
+		System.out.println("Hello World");
 		
 		for (int j = 0; j < listOfFiles.length; j++) {
 			String fullName = listOfFiles[j].getName();
