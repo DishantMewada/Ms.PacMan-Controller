@@ -24,18 +24,17 @@ import pacman.controllers.examples.RandomNonRevPacMan;
 import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
+import pacman.controllers.examples.CustomControllerPacman;
 import pacman.game.Game;
 import pacman.game.GameView;
 import static pacman.game.Constants.*;
+
 
 /**
  * This class may be used to execute the game in timed or un-timed modes, with or without
  * visuals. Competitors should implement their controllers in game.entries.ghosts and 
  * game.entries.pacman respectively. The skeleton classes are already provided. The package
- * structure should not be changed (although you may create sub-packages in these packages)
- * 
- * Adding a new comment
- * Adding one more new comment
+ * structure should not be changed (although you may create sub-packages in these packages).
  */
 @SuppressWarnings("unused")
 public class Executor
@@ -54,9 +53,11 @@ public class Executor
 		Executor exec=new Executor();
 		
 		/* run a game in synchronous mode: game waits until controllers respond. */
-		System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
-		exec.runGame(new StarterPacMan(), new Legacy2TheReckoning(), visual,delay);
-		
+		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
+		//exec.runGame(new NearestPillPacMan(), new StarterGhosts(), visual,delay);
+		exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
+		//exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
+		//exec.runExperiment(new StarterPacMan(), new StarterGhosts(),numTrials);
 		/* run multiple games in batch mode - good for testing. */
 		
 //		System.out.println("STARTER PACMAN vs LEGACY2THERECONING");
@@ -144,7 +145,14 @@ public class Executor
 	 * @param visual Indicates whether or not to use visuals
 	 * @param delay The delay between time-steps
 	 */
-	public void runGame(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,boolean visual,int delay)
+	
+    
+    
+    
+    
+    
+    
+    public void runGame(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,boolean visual,int delay)
 	{
 		Game game=new Game(0);
 
