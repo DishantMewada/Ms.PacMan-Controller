@@ -48,15 +48,15 @@ public class Executor
 	{
 		int delay=10;
 		boolean visual=true;
-		int numTrials=20;
+		int numTrials=100;
 		
 		Executor exec=new Executor();
 		
 		/* run a game in synchronous mode: game waits until controllers respond. */
 		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
 		//exec.runGame(new NearestPillPacMan(), new StarterGhosts(), visual,delay);
-		exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
-		//exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
+		//exec.runGame(new CustomControllerPacman(), new Legacy2TheReckoning(), visual,delay);
+		exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
 		//exec.runExperiment(new StarterPacMan(), new StarterGhosts(),numTrials);
 		/* run multiple games in batch mode - good for testing. */
 		
