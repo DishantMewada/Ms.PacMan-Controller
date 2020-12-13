@@ -55,7 +55,7 @@ public class Executor
 		/* run a game in synchronous mode: game waits until controllers respond. */
 		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
 		//exec.runGame(new NearestPillPacMan(), new StarterGhosts(), visual,delay);
-		exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
+		//exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
 		exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
 		//exec.runExperiment(new StarterPacMan(), new StarterGhosts(),numTrials);
 		/* run multiple games in batch mode - good for testing. */
@@ -114,9 +114,12 @@ public class Executor
     public void runExperiment(Controller<MOVE> pacManController,Controller<EnumMap<GHOST,MOVE>> ghostController,int trials)
     {
     	double avgScore=0;
+    	double avgTime=0;
     	
     	Random rnd=new Random(0);
 		Game game;
+		
+		System.out.println("Trials"+"\t"+"Score"+"\t"+"Time");
 		
 		for(int i=0;i<trials;i++)
 		{
@@ -129,10 +132,13 @@ public class Executor
 			}
 			
 			avgScore+=game.getScore();
-			System.out.println(i+"\t"+game.getScore());
+			avgTime+=game.getCurrentLevelTime();
+			System.out.println(i+"\t"+game.getScore()+"\t"+game.getCurrentLevelTime());
 		}
-		
-		System.out.println(avgScore/trials);
+		System.out.println("");
+		System.out.println("Average Score:"+avgScore/trials);
+		System.out.println("Average Time:"+avgTime/trials);
+
     }
 	
 	/**

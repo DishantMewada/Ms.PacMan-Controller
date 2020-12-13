@@ -13,10 +13,11 @@ import static pacman.game.Constants.*;
  * MyPacMan.zip and you will be entered into the rankings - as simple as that! Feel free to modify 
  * it or to start from scratch, using the classes supplied with the original software. Best of luck!
  *   
- * This controller utilises 3 tactics, in order of importance:
+ * This controller utilizes 4 tactics, in order of importance:
  * 1. Get away from any non-edible ghost that is in close proximity
  * 2. Go after the nearest edible ghost
- * 3. Go to the nearest pill/power pill
+ * 3. Get the distance from each ghost
+ * 4. go after the pills and power pills if the distance from the ghost is in the range
  */
 public class CustomControllerPacman extends Controller<MOVE>
 {      
@@ -70,31 +71,39 @@ public class CustomControllerPacman extends Controller<MOVE>
 		int[] powerPills=game.getPowerPillIndices();
 
 		for(GHOST ghost : GHOST.values()) {
-			//Distance_From_Ghosts.add(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost)));
-			//Distance_From_Ghosts.add(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost)));
+			Distance_From_Ghosts.add(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost)));
+			Distance_From_Ghosts.add(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost)));
 			Distance_From_Ghosts.add((int)game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost)));
 		}
 
-		//Strategy 4: go after the pills and power pills
-		for(GHOST ghost : GHOST.values()) {
+		//Strategy 4: go after the pills and power pills if the distance from the ghost is in the range
+		for (int s=0; s<=3; s++) 
+			
+			if(Distance_From_Ghosts.get(s)>MIN_DISTANCE && Distance_From_Ghosts.get(s)<MAX_DISTANCE)
+			{          
+				for(int i=0;i<pills.length;i++)					//check which pills are available			
+					if(closeToPill(game, i))
+						targets.add(pills[i]);
 
+				for(int i=0;i<powerPills.length;i++)			//check with power pills are available
+					if(closeToPower(game, i))
+						targets.add(powerPills[i]);				
+			}
 
-			for (int s=0; s<=3; s++) 
-				if(Distance_From_Ghosts.get(s)>MIN_DISTANCE && Distance_From_Ghosts.get(s)<MAX_DISTANCE)
-				{          
-					for(int i=0;i<pills.length;i++)					//check which pills are available			
-						if(closeToPill(game, i))
-							targets.add(pills[i]);
+			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.BLINKY))) {
+				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.BLINKY),DM.PATH);
+			}
+			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.INKY))) {
+				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.INKY),DM.PATH);
+			}
+			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.PINKY))) {
+				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.PINKY),DM.PATH);
+			}
+			else {
+				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.SUE),DM.PATH);
 
-					for(int i=0;i<powerPills.length;i++)			//check with power pills are available
-						if(closeToPower(game, i))
-							targets.add(powerPills[i]);				
-				}
-
-				else if (Collections.min(Distance_From_Ghosts) > game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))) {
-					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
-				}
-		}
+			}
+		
 		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
 
 		for(int i=0;i<targetsArray.length;i++)
