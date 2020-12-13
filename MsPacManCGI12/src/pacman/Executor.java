@@ -46,7 +46,7 @@ public class Executor
 	 */
 	public static void main(String[] args)
 	{
-		int delay=10;
+		int delay=20;
 		boolean visual=true;
 		int numTrials=100;
 		
