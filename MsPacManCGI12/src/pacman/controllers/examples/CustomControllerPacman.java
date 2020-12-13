@@ -1,7 +1,6 @@
 package pacman.controllers.examples;
 
 import java.util.Collections;
-import java.util.Random;
 import java.util.ArrayList;
 import pacman.controllers.Controller;
 import pacman.game.Game;
