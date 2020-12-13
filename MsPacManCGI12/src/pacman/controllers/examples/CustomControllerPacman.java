@@ -2,6 +2,7 @@ package pacman.controllers.examples;
 
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Arrays;
 import pacman.controllers.Controller;
 import pacman.game.Game;
 import pacman.game.Constants.DM;
@@ -18,6 +19,8 @@ import static pacman.game.Constants.*;
  * 2. Go after the nearest edible ghost
  * 3. Get the distance from each ghost
  * 4. go after the pills and power pills if the distance from the ghost is in the range
+ * 5: If Ms. PacMan is stuck at one position then move Ms. PacMan in another direction
+ * 
  */
 public class CustomControllerPacman extends Controller<MOVE>
 {      
@@ -47,7 +50,7 @@ public class CustomControllerPacman extends Controller<MOVE>
 
 		for(GHOST ghost : GHOST.values())
 
-			if(game.getGhostEdibleTime(ghost)>0)
+			if(game.getGhostEdibleTime(ghost)>15)
 			{
 				int distance=game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost));             
 				//				double distance= game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
@@ -78,7 +81,7 @@ public class CustomControllerPacman extends Controller<MOVE>
 
 		//Strategy 4: go after the pills and power pills if the distance from the ghost is in the range
 		for (int s=0; s<=3; s++) 
-			
+
 			if(Distance_From_Ghosts.get(s)>MIN_DISTANCE && Distance_From_Ghosts.get(s)<MAX_DISTANCE)
 			{          
 				for(int i=0;i<pills.length;i++)					//check which pills are available			
@@ -90,25 +93,48 @@ public class CustomControllerPacman extends Controller<MOVE>
 						targets.add(powerPills[i]);				
 			}
 
-			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.BLINKY))) {
+			else if (Collections.min(Distance_From_Ghosts) == game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.BLINKY))) {
 				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.BLINKY),DM.PATH);
 			}
-			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.INKY))) {
+			else if (Collections.min(Distance_From_Ghosts) == game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.INKY))) {
 				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.INKY),DM.PATH);
 			}
-			else if (Collections.min(Distance_From_Ghosts) == (int)game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.PINKY))) {
+			else if (Collections.min(Distance_From_Ghosts) == game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(GHOST.PINKY))) {
 				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.PINKY),DM.PATH);
 			}
 			else {
 				return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(GHOST.SUE),DM.PATH);
 
 			}
-		
+
 		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
 
 		for(int i=0;i<targetsArray.length;i++)
 			targetsArray[i]=targets.get(i);
 
+		//Strategy 5: If Ms. PacMan is stuck at one position then move Ms. PacMan in another direction
+
+		int[] currentPosition = new int[2];
+
+		if (game.getPacmanLastMoveMade() == MOVE.NEUTRAL) {
+
+			currentPosition[0] = current;
+			if (targetsArray.length > 0) {
+				Arrays.copyOf(targetsArray, targetsArray.length-1);
+				return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH);
+			}
+		}
+		else if (game.getPacmanLastMoveMade() == MOVE.LEFT)
+			return MOVE.RIGHT;
+		else if (game.getPacmanLastMoveMade() == MOVE.RIGHT)
+			return MOVE.LEFT;
+//		else if (game.getPacmanLastMoveMade() == MOVE.UP)
+//			return MOVE.DOWN;
+//		else if (game.getPacmanLastMoveMade() == MOVE.DOWN)
+//			return MOVE.UP;
+		else {
+			return game.getPacmanLastMoveMade();
+		}
 		//return the next direction once the closest target has been identified
 		return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH);
 
