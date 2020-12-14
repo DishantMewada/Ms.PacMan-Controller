@@ -10,12 +10,8 @@ import pacman.game.Constants.DM;
 import static pacman.game.Constants.*;
 
 /*
- * Pac-Man controller as part of the starter package - simply upload this file as a zip called
- * MyPacMan.zip and you will be entered into the rankings - as simple as that! Feel free to modify 
- * it or to start from scratch, using the classes supplied with the original software. Best of luck!
- *   
- * This controller utilizes 4 tactics, in order of importance:
- * 1. Get away from any non-edible ghost that is in close proximity
+ * This controller utilizes 5 tactics, in order of importance:
+ * 1. Get away from any non-edible ghost if too close
  * 2. Go after the nearest edible ghost
  * 3. Get the distance from each ghost
  * 4. go after the pills and power pills if the distance from the ghost is in the range
@@ -24,25 +20,33 @@ import static pacman.game.Constants.*;
  */
 public class CustomControllerPacman extends Controller<MOVE>
 {      
-	private static final int MIN_DISTANCE=8;      
-	private static final int MAX_DISTANCE=20;
-	private final static int PILL_PROXIMITY=15;
+	private static final int MIN_DISTANCE=8; // minimum distance      
+	private static final int MAX_DISTANCE=20; // maximum distance
+	private final static int PILL_PROXIMITY=15; // pill proximity
 
 	public MOVE getMove(Game game,long timeDue)
 	{                   
-		int current=game.getPacmanCurrentNodeIndex();
+		//Strategy 1: if any non-edible ghost is too close, run away from ghosts
+		
+		int current = game.getPacmanCurrentNodeIndex(); // current node index of Ms. PacMan
 
-		//Strategy 1: if any non-edible ghost is too close (less than MIN_DISTANCE), run away
-
+		//loop through each ghosts 
 		for(GHOST ghost : GHOST.values())
+			// if non-edible ghost and ghost liar time is 0 
 			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
+				// if ghost is very close i.e. less than MIN_DISTANCE
 				if(game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);
+					// then move away from ghosts
+					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);			
 		//				else if(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
 		//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.MANHATTAN);
 		//				else if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
 		//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
-
+/*
+ *  We have found that Euclidean Distance between ghosts and Ms.PacMan gives better score 
+ *  compared to shortest path distance and Manhattan Distance 
+ */
+		
 		//Strategy 2: find the nearest edible ghost and go after them 
 
 		int minDistance=Integer.MAX_VALUE;
@@ -128,10 +132,10 @@ public class CustomControllerPacman extends Controller<MOVE>
 			return MOVE.RIGHT;
 		else if (game.getPacmanLastMoveMade() == MOVE.RIGHT)
 			return MOVE.LEFT;
-//		else if (game.getPacmanLastMoveMade() == MOVE.UP)
-//			return MOVE.DOWN;
-//		else if (game.getPacmanLastMoveMade() == MOVE.DOWN)
-//			return MOVE.UP;
+		//		else if (game.getPacmanLastMoveMade() == MOVE.UP)
+		//			return MOVE.DOWN;
+		//		else if (game.getPacmanLastMoveMade() == MOVE.DOWN)
+		//			return MOVE.UP;
 		else {
 			return game.getPacmanLastMoveMade();
 		}
