@@ -1,82 +1,87 @@
 package pacman.controllers.examples;
-
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
-import pacman.controllers.Controller;
 import pacman.game.Game;
 import pacman.game.Constants.DM;
-
 import static pacman.game.Constants.*;
+import pacman.controllers.Controller;
 
-/*
- * This controller utilizes 5 tactics, in order of importance:
- * 1. Get away from any non-edible ghost if too close
- * 2. Go after the nearest edible ghost
- * 3. Get the distance from each ghost
- * 4. go after the pills and power pills if the distance from the ghost is in the range
- * 5: If Ms. PacMan is stuck at one position then move Ms. PacMan in another direction
- * 
+/* 
+ * This controller utilizes 5 tactics which are as follows:
+ * 1. Get away from any non-edible ghost if too close.
+ * 2. Go after the nearest edible ghost.
+ * 3. Get the distance from each ghost.
+ * 4. Go after the pills and power pills, if the distance from the ghost is in the range.
+ * 5: If Ms PacMan is stuck at one position then move Ms PacMan in another direction.
  */
+
+
 public class CustomControllerPacman extends Controller<MOVE>
+
 {      
 	private static final int MIN_DISTANCE=8; // minimum distance      
 	private static final int MAX_DISTANCE=20; // maximum distance
 	private final static int PILL_PROXIMITY=15; // pill proximity
 
 	public MOVE getMove(Game game,long timeDue)
+	
 	{                   
-		//Strategy 1: if any non-edible ghost is too close, run away from ghosts
 		
+		// Strategy 1: If any non-edible ghost is too close, run away from ghosts.		
 		int current = game.getPacmanCurrentNodeIndex(); // current node index of Ms. PacMan
 
-		//loop through each ghosts 
+		// loop through each ghosts. 
 		for(GHOST ghost : GHOST.values())
-			// if non-edible ghost and ghost liar time is 0 
+			
+			// If non-edible ghost and ghost liar time is 0. 
 			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
-				// if ghost is very close i.e. less than MIN_DISTANCE
-				if(game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-					// then move away from ghosts
-					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);			
-//				else if(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.MANHATTAN);
-//				else if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
+				
+				// If ghost is very close (less than MIN_DISTANCE), then move away from ghosts.
+				if(game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)			
+					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);		
+		
+				//else if(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
+					//return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.MANHATTAN);
+		
+				//else if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
+					//return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
+		
 /*
- *  We have found that Euclidean Distance between ghosts and Ms.PacMan gives better score 
- *  compared to shortest path distance and Manhattan Distance 
+ *  We have found that Euclidean Distance between ghosts and Ms.PacMan gives better score compared to shortest path distance and Manhattan Distance.
  */
 		
-		//Strategy 2: find the nearest edible ghost and go after them 
-
-		int minDistance=Integer.MAX_VALUE; // maximum possible value for minDistance variable
-		GHOST minGhost=null; // instantiating minGhost as null            
+		// Strategy 2: Find the nearest edible ghost and go after them.
+		int minDistance=Integer.MAX_VALUE; // maximum possible value for minDistance variable.
+		GHOST minGhost=null; // instantiating minGhost as null.            
 		
-		//loop through each ghosts 
+		// Loop through each ghost.
 		for(GHOST ghost : GHOST.values())
-			// if the ghost edible time is more than 15
+			
+			// If the ghost edible time is greater than 15.
 			if(game.getGhostEdibleTime(ghost)>15)
-			{	
-				// distance is the shortest path distance between current node index and ghost index
-				int distance=game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost));             
-//				double distance= game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
-//				int distance=game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
 				
-				// if distance is less than minDistance
-				// we update the minDistance and minGhost
+			{	
+				// distance is the shortest path distance between current node index and ghost's index.
+				int distance=game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost));  
+				
+				// double distance = game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
+				// int distance=game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
+				
+				// If distance is less than minDistance, we update the minDistance and minGhost.
 				if(distance<minDistance)
+					
 				{
 					minDistance=distance;
 					minGhost=ghost;
 				}
 			}
 		
-		// if edible ghost is found
-		// then move towards the ghost
+		// If edible ghost is found, then move towards the ghost with minimum distance.
 		if(minGhost!=null)  
 			return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(minGhost),DM.PATH);
 
-		//Strategy 3: Get the distance from each ghost
+		// Strategy 3: Get the distance from each ghost
 		ArrayList<Integer> Distance_From_Ghosts=new ArrayList<Integer>();
 		ArrayList<Integer> targets=new ArrayList<Integer>();
 
