@@ -38,10 +38,10 @@ public class CustomControllerPacman extends Controller<MOVE>
 				if(game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
 					// then move away from ghosts
 					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);			
-		//				else if(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-		//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.MANHATTAN);
-		//				else if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
-		//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
+//				else if(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
+//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.MANHATTAN);
+//				else if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
+//					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
 /*
  *  We have found that Euclidean Distance between ghosts and Ms.PacMan gives better score 
  *  compared to shortest path distance and Manhattan Distance 
@@ -49,25 +49,31 @@ public class CustomControllerPacman extends Controller<MOVE>
 		
 		//Strategy 2: find the nearest edible ghost and go after them 
 
-		int minDistance=Integer.MAX_VALUE;
-		GHOST minGhost=null;             
-
+		int minDistance=Integer.MAX_VALUE; // maximum possible value for minDistance variable
+		GHOST minGhost=null; // instantiating minGhost as null            
+		
+		//loop through each ghosts 
 		for(GHOST ghost : GHOST.values())
-
+			// if the ghost edible time is more than 15
 			if(game.getGhostEdibleTime(ghost)>15)
-			{
+			{	
+				// distance is the shortest path distance between current node index and ghost index
 				int distance=game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost));             
-				//				double distance= game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
-				//				int distance=game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
-
+//				double distance= game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
+//				int distance=game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost));             
+				
+				// if distance is less than minDistance
+				// we update the minDistance and minGhost
 				if(distance<minDistance)
 				{
 					minDistance=distance;
 					minGhost=ghost;
 				}
 			}
-
-		if(minGhost!=null)  //we found an edible ghost
+		
+		// if edible ghost is found
+		// then move towards the ghost
+		if(minGhost!=null)  
 			return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(minGhost),DM.PATH);
 
 		//Strategy 3: Get the distance from each ghost
