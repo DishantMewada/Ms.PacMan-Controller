@@ -49,7 +49,7 @@ public class BestPacManController extends Controller<MOVE>
 			if(game.getGhostEdibleTime(ghost) == 0 && game.getGhostLairTime(ghost)==0) {
 
 				// If ghost is very close (less than MIN_DISTANCE), then move away from ghosts.
-				if(game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
+				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MIN_DISTANCE)
 
 					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);		
 			}
