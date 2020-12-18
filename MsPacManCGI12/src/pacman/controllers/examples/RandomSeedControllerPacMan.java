@@ -23,7 +23,7 @@ import pacman.controllers.Controller;
  */
 
 
-public class CustomControllerPacman extends Controller<MOVE>
+public class RandomSeedControllerPacMan extends Controller<MOVE>
 
 {   
 	Random rand = new Random();

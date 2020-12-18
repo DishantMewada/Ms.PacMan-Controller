@@ -24,7 +24,8 @@ import pacman.controllers.examples.RandomNonRevPacMan;
 import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
-import pacman.controllers.examples.CustomControllerPacman;
+import pacman.controllers.examples.RandomSeedControllerPacMan;
+import pacman.controllers.examples.BestPacManController;
 import pacman.controllers.examples.Custom01;
 import pacman.game.Game;
 import pacman.game.GameView;
@@ -58,11 +59,13 @@ public class Executor
 		// Running the experiment with random MinDistane and MaxDistance in suitable range  //
 		///////////////////////////////////////////////////////////////////////////////////////
 		
-		for (int i=0; i<=30; i++) {
-			System.out.println("Experiment:"+(i+1));
-			exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
-			System.out.println();
-		}
+//		for (int i=0; i<5; i++) {
+//			System.out.println("Experiment:"+(i+1));
+//			exec.runExperiment(new RandomSeedControllerPacMan(), new StarterGhosts(),numTrials);
+//			System.out.println();
+//		}
+		
+		exec.runExperiment(new BestPacManController(), new StarterGhosts(),numTrials);
 		
 		/* run a game in synchronous mode: game waits until controllers respond. */
 		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
