@@ -54,8 +54,8 @@ public class Executor
 		Executor exec=new Executor();
 		
 		///////////////////////////////////////////////////////////////////////////////////////
-		// Experiment:                                                                      //
-		// Running the experiment with random MinDistane and MaxDistance in suitable range  //
+		// Experiment:                                                                       //
+		// Running the experiment with random MinDistane and MaxDistance in suitable range   //
 		///////////////////////////////////////////////////////////////////////////////////////
 		
 //		for (int i=0; i<5; i++) {
@@ -63,6 +63,10 @@ public class Executor
 //			exec.runExperiment(new RandomSeedControllerPacMan(), new StarterGhosts(),numTrials);
 //			System.out.println();
 //		}
+		
+		///////////////////////////////////////////////////////////////////////////////////////
+		// Running BestPacManController vs StarterGhosts                                     //
+		///////////////////////////////////////////////////////////////////////////////////////
 		
 		exec.runExperiment(new BestPacManController(), new StarterGhosts(),numTrials);
 		
