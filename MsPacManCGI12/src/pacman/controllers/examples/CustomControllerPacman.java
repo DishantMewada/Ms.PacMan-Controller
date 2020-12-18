@@ -10,7 +10,7 @@ import static pacman.game.Constants.*;
 import pacman.controllers.Controller;
 
 /* 
- * This controller utilizes 5 tactics which are as follows:
+ * This controller utilizes 5 tactics in order which are as follows:
  * 1. Get away from any non-edible ghost if too close.
  * 2. Go after the nearest edible ghost.
  * 3. Get the distance from each ghost, if the distance from each ghost is more than max distance move away from ghost.
@@ -32,8 +32,10 @@ public class CustomControllerPacman extends Controller<MOVE>
 	public MOVE getMove(Game game,long timeDue)
 
 	{                   
+		////////////////////////////////////////////////////////////////////////////
+		// Strategy 1: If any non-edible ghost is too close, run away from ghosts.//
+		////////////////////////////////////////////////////////////////////////////
 
-		// Strategy 1: If any non-edible ghost is too close, run away from ghosts.		
 		int current = game.getPacmanCurrentNodeIndex(); // current node index of Ms. PacMan
 
 		// loop through each ghosts. 
@@ -48,11 +50,10 @@ public class CustomControllerPacman extends Controller<MOVE>
 					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.EUCLID);		
 			}
 
-		/*
-		 *  We have found that Euclidean Distance between ghosts and Ms.PacMan gives better score compared to shortest path distance and Manhattan Distance.
-		 */
+		/////////////////////////////////////////////////////////////////
+		// Strategy 2: Find the nearest edible ghost and go after them.//
+		/////////////////////////////////////////////////////////////////
 
-		// Strategy 2: Find the nearest edible ghost and go after them.
 		double minDistance=Integer.MAX_VALUE; // maximum possible value for minDistance variable.
 		GHOST minGhost=null; // instantiating minGhost as null.            
 
@@ -80,50 +81,68 @@ public class CustomControllerPacman extends Controller<MOVE>
 
 			return game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(minGhost),DM.PATH);
 		}
-		// Strategy 3: Get the distance from each ghost
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Strategy 3: Get the distance from each ghost, if the distance is less than max distance, move away from ghost//
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		// ArrayList for gathering Distances from each ghosts
 		ArrayList<Integer> Distance_From_Ghosts=new ArrayList<Integer>();
 
+		// Iterate through each ghost, and add all three distances between ghost and Ms PacMan
 		for(GHOST ghost : GHOST.values()) {
-			//System.out.println(game.getGhostCurrentNodeIndex(ghost));
+
 			Distance_From_Ghosts.add(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost)));
 			Distance_From_Ghosts.add(game.getManhattanDistance(current,game.getGhostCurrentNodeIndex(ghost)));
 			Distance_From_Ghosts.add((int)game.getEuclideanDistance(current,game.getGhostCurrentNodeIndex(ghost)));
+
 		}
+
+		// Iterate through each ghost 
 		for(GHOST ghost : GHOST.values()) {
 
+			// Iterate through each element in the ArrayList
 			for (int s=0; s<=11; s++)
 
+				// Move away from ghost, if the distance from ghost is less than max distance
 				if(Distance_From_Ghosts.get(s)<MAX_DISTANCE && game.getGhostLairTime(ghost)!=0)
 				{
 					return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
 
 				}
 		}
-		//Strategy 4: go after the pills and power pills if the distance from the ghost is in the range
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		//Strategy 4: go after the pills and power pills if the distance from the ghost is in the range//
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+
+		// ArrayList for targets node
 		ArrayList<Integer> targets=new ArrayList<Integer>();
 
+		// Get active indices for Pills and PowerPills
 		int[] pills=game.getActivePillsIndices();
 		int[] powerPills=game.getActivePowerPillsIndices();
 
+		// Iterate through each element in the ArrayList
 		for (int s=0; s<=11; s++)
 
+			// for each ghost if ghost is far way, capture the PowerPill
 			for(GHOST ghost : GHOST.values())
 
 				if(Distance_From_Ghosts.get(s)>MIN_DISTANCE && game.getGhostLairTime(ghost)>0)
 
 				{   	    
-					for(int i=0;i<powerPills.length;i++) 			//check with power pills are available
+					for(int i=0;i<powerPills.length;i++) 			//check whether power pills are available
 						if(closeToPower(game, i)) {
-							//							System.out.println(powerPills[i]);
 							targets.add(powerPills[i]);
 						}
-						else 										//check which pills are available			
+						else 										//check whether pills are available
 							if(!closeToPower(game, i) && game.isPillStillAvailable(i)) {
 								targets.add(pills[i]);
 							}
 
 				}
-				else 
+				else // If ghost is nearby, move away from ghost
 					if (Collections.min(Distance_From_Ghosts) == game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost)) && game.getGhostLairTime(ghost)>0) {
 						return game.getNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(),game.getGhostCurrentNodeIndex(ghost),DM.PATH);
 					}
@@ -133,18 +152,25 @@ public class CustomControllerPacman extends Controller<MOVE>
 		for(int i=0;i<targets.size();i++)
 			targetsArray[i]=targets.get(i);
 
-		//Strategy 5: If Ms. PacMan is stuck at one position then move Ms. PacMan in another direction
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		//Strategy 5: If Ms. PacMan is stuck at one position then move Ms. PacMan in another direction//
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		int[] currentPosition = new int[2];
-
+		
+		// If the last move is neutral move
 		if (game.getPacmanLastMoveMade() == MOVE.NEUTRAL) {
-
+			
 			currentPosition[0] = current;
+			
+			// If targetArray is not empty, make a new targetArray with last element removed
+			// and move towards the closest node index between current node and target array node with the shortest path distance
 			if (targetsArray.length > 0) {
 				Arrays.copyOf(targetsArray, targetsArray.length-1);
 				return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH);
 			}
 		}
+		
 		else {
 			return game.getPacmanLastMoveMade();
 		}
