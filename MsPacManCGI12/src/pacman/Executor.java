@@ -25,6 +25,7 @@ import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.controllers.examples.CustomControllerPacman;
+import pacman.controllers.examples.Custom01;
 import pacman.game.Game;
 import pacman.game.GameView;
 import static pacman.game.Constants.*;
@@ -46,7 +47,7 @@ public class Executor
 	 */
 	public static void main(String[] args)
 	{
-		int delay=20;
+		int delay=25;
 		boolean visual=true;
 		int numTrials=100;
 		
@@ -54,9 +55,11 @@ public class Executor
 		
 		/* run a game in synchronous mode: game waits until controllers respond. */
 		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
-		//exec.runGame(new NearestPillPacMan(), new StarterGhosts(), visual,delay);
-		//exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
+//		exec.runGame(new NearestPillPacMan(), new StarterGhosts(), visual,delay);
+//		exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
 		exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
+		//exec.runGame(new Custom01(), new StarterGhosts(), visual,delay);
+		//exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
 		//exec.runExperiment(new StarterPacMan(), new StarterGhosts(),numTrials);
 		/* run multiple games in batch mode - good for testing. */
 		
