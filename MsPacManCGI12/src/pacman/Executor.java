@@ -26,7 +26,6 @@ import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.controllers.examples.RandomSeedControllerPacMan;
 import pacman.controllers.examples.BestPacManController;
-import pacman.controllers.examples.Custom01;
 import pacman.game.Game;
 import pacman.game.GameView;
 import static pacman.game.Constants.*;
