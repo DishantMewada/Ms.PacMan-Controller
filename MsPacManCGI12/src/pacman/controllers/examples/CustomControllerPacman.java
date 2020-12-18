@@ -5,6 +5,7 @@ import java.util.Arrays;
 import pacman.game.Game;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
+import java.util.Random;
 
 import static pacman.game.Constants.*;
 import pacman.controllers.Controller;
@@ -24,18 +25,23 @@ import pacman.controllers.Controller;
 
 public class CustomControllerPacman extends Controller<MOVE>
 
-{      
-	private static final int MIN_DISTANCE=8; // minimum distance      
-	private static final int MAX_DISTANCE=20; // maximum distance
+{   
+	Random rand = new Random();
+	
+	// Minimum Distance from Ghost
+	private final int MIN_DISTANCE = 8 + rand.nextInt((10 - 8) + 1);
+	
+	// Maximum Distance from Ghost
+	private final int MAX_DISTANCE = 15 + rand.nextInt((25 - 15) + 1);;
+	
 	private final static int POWER_PILL_PROXIMITY=15; // pill proximity
-
+	
 	public MOVE getMove(Game game,long timeDue)
 
 	{                   
 		////////////////////////////////////////////////////////////////////////////
 		// Strategy 1: If any non-edible ghost is too close, run away from ghosts.//
 		////////////////////////////////////////////////////////////////////////////
-
 		int current = game.getPacmanCurrentNodeIndex(); // current node index of Ms. PacMan
 
 		// loop through each ghosts. 

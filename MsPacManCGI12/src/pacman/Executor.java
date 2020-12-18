@@ -53,9 +53,20 @@ public class Executor
 		
 		Executor exec=new Executor();
 		
+		///////////////////////////////////////////////////////////////////////////////////////
+		// Experiment:                                                                      //
+		// Running the experiment with random MinDistane and MaxDistance in suitable range  //
+		///////////////////////////////////////////////////////////////////////////////////////
+		
+		for (int i=0; i<=30; i++) {
+			System.out.println("Experiment:"+(i+1));
+			exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
+			System.out.println();
+		}
+		
 		/* run a game in synchronous mode: game waits until controllers respond. */
 		//System.out.println("STARTER PACMAN vs LEGACY2THERECKONING");
-		exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
+
 		//exec.runGame(new CustomControllerPacman(), new StarterGhosts(), visual,delay);
 		//exec.runGame(new Custom01(), new StarterGhosts(), visual,delay);
 		//exec.runExperiment(new CustomControllerPacman(), new StarterGhosts(),numTrials);
